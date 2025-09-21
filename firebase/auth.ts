@@ -1,11 +1,11 @@
-//funcoes de login
-import { auth } from "./config";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+// firebase/auth.ts
+import { getAuth, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { app } from "./config";
 
-// Registro de usuário
-export const registerUser = (email: string, password: string) =>
-  createUserWithEmailAndPassword(auth, email, password);
+export const auth = getAuth(app);
 
-// Login de usuário
-export const loginUser = (email: string, password: string) =>
-  signInWithEmailAndPassword(auth, email, password);
+export async function loginWithGoogle(idToken: string) {
+  const credential = GoogleAuthProvider.credential(idToken);
+  const userCredential = await signInWithCredential(auth, credential);
+  return userCredential.user;
+}

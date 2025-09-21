@@ -3,9 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useAvisos } from "../context/ContextoAvisos";
+import { auth } from "../firebase/auth"; // importa auth do Firebase
 
 export default function AddAvisoScreen() {
-  const { avisos, addAviso } = useAvisos();
+  const { avisos, addAviso, editarAviso } = useAvisos();
   const [titulo, setTitulo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [data, setData] = useState(new Date());
@@ -14,17 +15,25 @@ export default function AddAvisoScreen() {
   const params = useLocalSearchParams() as { id?: string };
   const id = params.id;
 
-  //edicao
+  const userUid = auth.currentUser?.uid;
+
+  // Preenche campos para edição
   useEffect(() => {
-  if (id) {
-    const avisoExistente = avisos.find((a) => a.id === id);
-    if (avisoExistente) {
-      setTitulo(avisoExistente.titulo);
-      setDescricao(avisoExistente.descricao);
-      setData(avisoExistente.data);
+    if (id) {
+      const avisoExistente = avisos.find((a) => a.id === id);
+      if (avisoExistente) {
+        if (avisoExistente.uid !== userUid) {
+          Alert.alert("Atenção", "Você só pode editar seus próprios avisos.");
+          router.back();
+          return;
+        }
+        setTitulo(avisoExistente.titulo);
+        setDescricao(avisoExistente.descricao);
+        setData(avisoExistente.data); // já é Date
+      }
     }
-  }
-}, [id, avisos]);
+  }, [id, avisos, userUid]);
+
   const salvarAviso = async () => {
     if (!titulo.trim() || !descricao.trim()) {
       Alert.alert("Campos obrigatórios", "Preencha título e descrição.");
@@ -32,7 +41,17 @@ export default function AddAvisoScreen() {
     }
 
     try {
-      await addAviso(titulo, descricao); // salva via contexto
+      if (id) {
+        // Edição
+        await editarAviso(id, { titulo, descricao, data });
+      } else {
+        // Criação
+        if (!userUid) {
+          Alert.alert("Erro", "Usuário não autenticado.");
+          return;
+        }
+        await addAviso(titulo, descricao, userUid, data);
+      }
       router.back();
     } catch (error) {
       console.error(error);
@@ -43,7 +62,7 @@ export default function AddAvisoScreen() {
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: "#127e3f" }}>
       <Text style={{ fontSize: 20, fontWeight: "bold", color: "#fcf5e5", marginBottom: 10 }}>
-        Novo Aviso
+        {id ? "Editar Aviso" : "Novo Aviso"}
       </Text>
 
       <TextInput
@@ -91,7 +110,9 @@ export default function AddAvisoScreen() {
         style={{ backgroundColor: "#fcf5e5", padding: 15, borderRadius: 8, alignItems: "center" }}
         onPress={salvarAviso}
       >
-        <Text style={{ color: "#000908", fontSize: 16, fontWeight: "bold" }}>Salvar Aviso</Text>
+        <Text style={{ color: "#000908", fontSize: 16, fontWeight: "bold" }}>
+          Salvar Aviso
+        </Text>
       </TouchableOpacity>
     </View>
   );

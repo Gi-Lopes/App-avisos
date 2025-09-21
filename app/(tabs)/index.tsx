@@ -54,6 +54,7 @@ export default function AvisosScreen() {
               >
                 <Text style={{ color: "#fff", fontWeight: "bold" }}>Editar</Text>
               </TouchableOpacity>
+
             </View>
           </View>
         )}

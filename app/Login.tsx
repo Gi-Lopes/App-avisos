@@ -1,99 +1,63 @@
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAuth } from "../context/AuthContext";
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
+import { useAuth } from "../context/AuthContext";
+import { loginWithGoogle } from "../firebase/auth"; // 🔑 função que já criamos
 
-//depois
-import { loginUser, registerUser } from "../firebase/auth";
+WebBrowser.maybeCompleteAuthSession();
 
-
-export default function LoginScreen() {
+export default function Login() {
   const router = useRouter();
-  const [usuario, setUsuario] = useState("");
-  const [senha, setSenha] = useState("");
-  const {setIsLoggedIn} = useAuth();
+  const { user, signInWithGoogle } = useAuth();
 
-  
-  const login = () => {
 
-    // Para teste rápido, qualquer usuário/senha permite login
-    setIsLoggedIn(true);
-    router.replace("/"); // substitui a tela atual
-  };
+  // Se já estiver logado, pula para a tela de tabs
+  useEffect(() => {
+    if (user) {
+      router.replace("/(tabs)");
+    }
+  }, [user]);
+
 
   return (
-    <View style={{ 
-      flex: 1, 
-      padding: 20, 
-      justifyContent: "center",
-      // alignItems: "center",
-      backgroundColor: "#127e3f" }}>
-      <View
-        style={{
-          flexDirection: "row", //organiza os filhos na horizontal
-          alignItems: "center", //alinha verticamente
-          justifyContent: "center", //centraliza horizontalmente
-          marginBottom: 30,
-        }}
-      >
-        
-        <MaterialCommunityIcons 
-          name="cube-outline" 
-          size={200} 
-          color="#fcf5e5"
-          style ={{marginRight: 15}}//espaco entre o cubo e o texto
-          />
-        <Text style={{
-            fontSize: 28,
-            fontWeight: "bold",
-            color: "#fcf5e5",
-            textShadowColor: "#000908",
-            textShadowOffset: {width: 2, height: 2},
-            textShadowRadius: 4,
-          }}>
-
-          PET Computação{"\n"} Avisos
-        </Text>
-
-      </View>
-      <Text style={{ fontSize: 24, 
-        fontWeight: "bold", 
-        color: "#fcf5e5", 
-        marginBottom: 20, 
-        textShadowColor: "#000", 
-        textShadowOffset: {width: 2, height: 2},
-        textShadowRadius: 3,
-      }}>Login</Text>
-
-      <TextInput
-        placeholder="Usuário"
-        value={usuario}
-        onChangeText={setUsuario}
-        style={{ backgroundColor: "#fcf5e5", padding: 12, borderRadius: 8, marginBottom: 10 }}
-      />
-
-      <TextInput
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-        style={{ backgroundColor: "#fcf5e5", padding: 12, borderRadius: 8, marginBottom: 20 }}
-      />
+    <View style={styles.container}>
+      <Text style={styles.title}>Bem-vindo</Text>
 
       <TouchableOpacity
-        style={{ backgroundColor: "#57ba48", padding: 15, borderRadius: 8, alignItems: "center" }}
-        onPress={login}
+        style={styles.button}
+        onPress={signInWithGoogle}
       >
-        <Text style={{ 
-          color: "#fcf5e5", 
-          fontWeight: "bold",
-          textShadowColor: "#000", 
-          textShadowOffset: {width: 2, height: 2},
-          textShadowRadius: 3,
-          
-          }}>Entrar</Text>
+        <Text style={styles.buttonText}>Entrar com Google</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#127e3f",
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 40,
+  },
+  button: {
+    backgroundColor: "#fff",
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: "#127e3f",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+});

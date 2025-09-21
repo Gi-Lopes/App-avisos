@@ -21,7 +21,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "br.usp.petcomputacao.avisos"
+      "package": "br.usp.petcomputacao.avisos",
+      "googleServicesFile": "./android/app/google-services.json" //garante que o expo leia o google-services.json
     },
     "web": {
       "output": "static",
