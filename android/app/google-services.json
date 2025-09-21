@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "561215482832",
+    "project_id": "app-mobile-de-avisos-68450",
+    "storage_bucket": "app-mobile-de-avisos-68450.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561215482832:android:d1b50c2df4c4864ece27d5",
+        "android_client_info": {
+          "package_name": "br.usp.petcomputacao.avisos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561215482832-umg9d5hfetm5vmp8html6nn3ng4ftk6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.usp.petcomputacao.avisos",
+            "certificate_hash": "015def767f2c0a34d554fd3c4f74a8287971b069"
+          }
+        },
+        {
+          "client_id": "561215482832-pflnnl8v3o2f3gie0gku2t66e1peo8lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF9Cm-2XQI2uX2lpq9lvwKy0n39ZrPTzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561215482832-pflnnl8v3o2f3gie0gku2t66e1peo8lh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "561215482832-0odavclro8tpdgdqib4ur7ef81qjd1a6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.usp.petcomputacao.avisos.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
