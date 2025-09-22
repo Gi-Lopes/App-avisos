@@ -40,6 +40,3 @@ app-example
 
 # generated native folders
 /ios
--/android
-+/android
-!/android/app/google-services.json
